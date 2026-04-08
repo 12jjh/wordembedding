@@ -10,66 +10,90 @@
 
 <style>
   body {
-    font-family: sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     background: #0f172a;
     color: #e2e8f0;
     max-width: 900px;
     margin: auto;
-    padding: 20px;
+    padding: 24px;
   }
 
   h1 {
     text-align: center;
-    font-size: 1.4rem;
-    margin-bottom: 20px;
+    font-size: 1.6rem;
+    margin-bottom: 24px;
+    font-weight: 600;
   }
 
   .section {
     background: #1e293b;
-    padding: 16px;
-    border-radius: 10px;
-    margin-bottom: 16px;
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
   }
 
   input {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin: 6px 0;
-    border-radius: 6px;
-    border: none;
-    background: #334155;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #0f172a;
     color: white;
+    transition: 0.2s;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #22d3ee;
+    box-shadow: 0 0 0 2px rgba(34,211,238,0.2);
   }
 
   button {
     padding: 10px 16px;
-    border-radius: 6px;
+    border-radius: 8px;
     border: none;
     background: #22d3ee;
     color: black;
     cursor: pointer;
     margin-top: 10px;
+    font-weight: 600;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    transform: translateY(-1px);
+    background: #06b6d4;
   }
 
   .model-option {
-    padding: 8px;
+    padding: 10px;
     border: 1px solid #334155;
     margin-bottom: 6px;
     cursor: pointer;
-    border-radius: 6px;
+    border-radius: 8px;
+    transition: 0.2s;
+  }
+
+  .model-option:hover {
+    border-color: #22d3ee;
   }
 
   .model-option.selected {
-    background: #334155;
+    background: rgba(34,211,238,0.1);
+    border-color: #22d3ee;
   }
 
   .chip {
     display: inline-flex;
     align-items: center;
-    padding: 4px 8px;
-    background: #334155;
-    border-radius: 6px;
-    margin: 3px;
+    padding: 6px 10px;
+    background: rgba(34,211,238,0.1);
+    border: 1px solid rgba(34,211,238,0.3);
+    border-radius: 8px;
+    margin: 4px;
+    font-size: 0.9rem;
   }
 
   .chip button {
@@ -78,13 +102,20 @@
     border: none;
     color: #94a3b8;
     cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .chip button:hover {
+    color: #f87171;
   }
 
   .result-item {
-    margin: 6px 0;
-    padding: 6px;
-    background: #334155;
-    border-radius: 6px;
+    margin: 8px 0;
+    padding: 10px;
+    background: #0f172a;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    font-family: monospace;
   }
 
   .status-bar {
@@ -99,13 +130,11 @@
 
 <h1>Word Embedding Arithmetic</h1>
 
-<!-- Model -->
 <div class="section">
   <div>Model</div>
   <div id="modelGrid"></div>
 </div>
 
-<!-- Query -->
 <div class="section">
   <div>A − B + C</div>
   <input id="wordA" value="queen">
@@ -113,7 +142,6 @@
   <input id="wordC" value="man">
 </div>
 
-<!-- Targets -->
 <div class="section">
   <div>Targets</div>
   <div id="chipWrap">
@@ -128,9 +156,7 @@
   <div class="status-bar" id="statusBar"></div>
 </div>
 
-<!-- Results -->
 <div class="section" id="resultsSection" style="display:none">
-  <div id="formulaDisplay"></div>
   <div id="resultsContainer"></div>
 </div>
 
@@ -243,21 +269,15 @@ input.addEventListener('keydown',e=>{
     chip.className='chip';
 
     chip.innerHTML=`${v} <button>×</button>`;
-
-    chip.querySelector('button').onclick=()=>{
-      chip.remove();
-    };
+    chip.querySelector('button').onclick=()=>chip.remove();
 
     wrap.insertBefore(chip,input);
     input.value='';
   }
 
-  // Backspace 삭제
   if(e.key==='Backspace' && input.value===''){
     const chips=document.querySelectorAll('.chip');
-    if(chips.length>0){
-      chips[chips.length-1].remove();
-    }
+    if(chips.length>0) chips[chips.length-1].remove();
   }
 });
 
