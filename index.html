@@ -64,11 +64,20 @@
   }
 
   .chip {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     padding: 4px 8px;
     background: #334155;
     border-radius: 6px;
     margin: 3px;
+  }
+
+  .chip button {
+    margin-left: 6px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
   }
 
   .result-item {
@@ -88,7 +97,7 @@
 
 <body>
 
-<h1>Word Embedding</h1>
+<h1>Word Embedding Arithmetic</h1>
 
 <!-- Model -->
 <div class="section">
@@ -198,14 +207,15 @@ window._runCompute=async function(){
   const q=vec(a,b,c);
 
   let res=[];
-  document.querySelectorAll('.chip').forEach(async el=>{
-    const w=el.textContent;
-    const e=await encode(ext,w);
+  const chips=document.querySelectorAll('.chip');
+
+  for (let i = 0; i < chips.length; i++) {
+    const w = chips[i].childNodes[0].nodeValue.trim();
+    const e = await encode(ext,w);
     res.push({word:w,score:cosine(q,e)});
-    if(res.length===document.querySelectorAll('.chip').length){
-      show(res);
-    }
-  });
+  }
+
+  show(res);
 };
 
 function show(res){
@@ -228,11 +238,26 @@ input.addEventListener('keydown',e=>{
   if(e.key==='Enter'){
     const v=input.value.trim();
     if(!v)return;
+
     const chip=document.createElement('span');
     chip.className='chip';
-    chip.textContent=v;
+
+    chip.innerHTML=`${v} <button>×</button>`;
+
+    chip.querySelector('button').onclick=()=>{
+      chip.remove();
+    };
+
     wrap.insertBefore(chip,input);
     input.value='';
+  }
+
+  // Backspace 삭제
+  if(e.key==='Backspace' && input.value===''){
+    const chips=document.querySelectorAll('.chip');
+    if(chips.length>0){
+      chips[chips.length-1].remove();
+    }
   }
 });
 
